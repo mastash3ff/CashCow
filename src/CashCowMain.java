@@ -1,21 +1,19 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
-
 import mongodb.Mongodb_Driver;
 import parser.CowParser;
-import utils.Dumps;
 
 /**
  * 
  * @author Brandon Sheffield
  * 
- * Cash main driver that reads daily cattle rates.  Passes it to
+ * Cash cow main driver that reads daily cattle rates.  Passes it to
  * database for storage.
  */
 public class CashCowMain {
@@ -24,13 +22,17 @@ public class CashCowMain {
 
 
 	public static void main(String[] args) throws IOException {
+		//run everyday and have duplicates be overwritten for weekend
+		/*if (isWeekend())
+			System.exit(0);
+		*/
 		readInFile();
+		Mongodb_Driver.dropAllData();
 		Mongodb_Driver.insertDailyData(metaData_map, prices_list);
 	}
 	
 	//reads in cattle data and hands off to parse to return useful data
 	public static void readInFile() throws IOException{
-		//TODO eventually do stuff with these 
 		String reportName;
 		String metaData;
 		String locationDailySummary;
@@ -41,14 +43,17 @@ public class CashCowMain {
 		String headers;//TODO currently no use. keep for now.
 		final String DAILY_WEB_LINK = "http://www.ams.usda.gov/mnreports/mg_ls144.txt";
 		
-		//TODO need to change static http reference eventually
-		File f = new File("./src/read_this");
-		BufferedReader in = new BufferedReader(new FileReader(f));
+		//for offline testing
+		//File f = new File("./src/read_this");
+		//BufferedReader in = new BufferedReader(new FileReader(f));
+		
+		URL url = new URL("http://www.ams.usda.gov/mnreports/mg_ls144.txt");
+		BufferedReader in = new BufferedReader( new InputStreamReader(url.openStream()));
 		
 		reportName = in.readLine();
 		metaData = in.readLine();
 		
-		in.readLine(); //blank line throwaway
+		in.readLine(); //blank line throw away
 		locationDailySummary = in.readLine();
 		dateOfLiveAuctions = in.readLine();
 		in.readLine();
@@ -59,7 +64,7 @@ public class CashCowMain {
 		line = in.readLine();
 		descripStr.append(line);
 		while (!line.matches(""))
-			descripStr.append(line = in.readLine().trim());
+			descripStr.append(line = in.readLine());
 		
 		description = descripStr.toString();	
 		metaData_map = CowParser.buildMetaDataMap(reportName, metaData,locationDailySummary,
@@ -83,5 +88,16 @@ public class CashCowMain {
 			line = in.readLine();
 		}
 		in.close();
+	}
+	
+	private static boolean isWeekend(){
+		Calendar cal = Calendar.getInstance();
+		Integer today = cal.get(Calendar.DAY_OF_WEEK);
+		//1 and 7 represent Sunday and Saturday respectively
+		if (today == 1 || today == 7)
+			return true;
+		else
+			return false;
+		
 	}
 }

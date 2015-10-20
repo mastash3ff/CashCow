@@ -6,7 +6,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import static java.util.Arrays.asList;
 
@@ -19,9 +18,7 @@ public class Mongodb_Driver {
 	final static String DATE_OF_LIVE_AUCTIONS = "Date of Live Auctions";
 	final static String RECEIPTS = "Receipts";
 	final static String SUMMARY = "Summary";
-	
 	final static String FEEDER_HEIFERS = "Feeder Heifers";
-	
 	final static String HEAD = "Head";
 	final static String WT_RNG = "Wt Range";
 	final static String AVG_WT = "Avg Wt";
@@ -38,8 +35,6 @@ public class Mongodb_Driver {
 	 * @throws ParseException 
 	 */	
 	public static void insertDailyData(Map<String, Object> metadata_map, ArrayList<Map<String, Object>> prices_list){
-		List<Object> l = new ArrayList<>();
-		l.add(prices_list.get(0).keySet());
 		String report = (String) metadata_map.get(REPORT);
 		String location = (String) metadata_map.get(LOCATION);
 		String date = (String) metadata_map.get(DATE);
