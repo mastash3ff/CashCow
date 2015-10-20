@@ -9,40 +9,24 @@ and show in json format upon certain route
 i.e. bsheffield.com/cashcow/daily_data
 '''
 
-from flask import Flask, request
-from flask_restful import Resource, Api
-from json import dumps
+from flask import Flask, jsonify
+from flask_restful import Resource
 from pymongo.mongo_client import MongoClient
-from datetime import datetime
+from pymongo import DESCENDING
 
+app = Flask(__name__)  
 
-def daily_json():
+@app.route('/cashcow/daily_data',methods=['GET'])
+def get():
     client = MongoClient('localhost',27017) #explicit default 
     db = client['cashcow']
     collec = db['daily_reports']
     
-    today = dayHelper(datetime.weekday(datetime.now()))
-    todayData = collec.find_one( {"Date":today} )
-    print(todayData)
+    #grab most recent insertion...shaky logic i know
+    cursor = collec.find().sort('_id',DESCENDING).limit(1)
+    doc = cursor[0]
+    doc.pop('_id') #get rid of id. causes problems w/ jsonify
+    return jsonify({'Daily Data':doc})
     
-def dayHelper(day):
-    if  (day is 0):
-        return 'Mon'
-    elif(day is 1):
-        return 'Tue'
-    elif(day is 2):
-        return 'Wed'
-    elif(day is 3):
-        return 'Thu'
-    elif(day is 4):
-        return 'Fri'
-    elif(day is 5): #return Friday for Saturday and Sunday since
-        return 'Fri'#auction is closed on weekends
-    elif(day is 6):
-        return 'Fri'
-    else:
-        return None
-
 if __name__ == '__main__':
-    daily_json()
-        
+    app.run(debug=True)
