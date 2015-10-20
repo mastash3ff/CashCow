@@ -27,7 +27,7 @@ public class CashCowMain {
 			System.exit(0);
 		*/
 		readInFile();
-		Mongodb_Driver.dropAllData();
+		//Mongodb_Driver.dropAllData();
 		Mongodb_Driver.insertDailyData(metaData_map, prices_list);
 	}
 	
