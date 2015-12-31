@@ -27,6 +27,11 @@ def get():
     doc = cursor[0]
     doc.pop('_id') #get rid of id. causes problems w/ jsonify
     return jsonify({'Daily Data':doc})
-    
+
+'''
+TODO
+-grab weekly data
+'''
+
 if __name__ == '__main__':
     app.run(debug=True)

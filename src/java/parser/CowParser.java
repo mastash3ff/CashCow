@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser;
+package java.parser;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import utils.Logging;
+import java.utils.Logging;
 
 /**
  * @author Brandon Sheffield

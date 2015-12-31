@@ -1,13 +1,14 @@
+package java.main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.mongodb.Mongodb_Driver;
 import java.net.URL;
+import java.parser.CowParser;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import mongodb.Mongodb_Driver;
-import parser.CowParser;
 
 /**
  * 
@@ -22,16 +23,18 @@ public class CashCowMain {
 
 
 	public static void main(String[] args) throws IOException {
-		//run everyday and have duplicates be overwritten for weekend
-		/*if (isWeekend())
-			System.exit(0);
-		*/
-		readInFile();
-		//Mongodb_Driver.dropAllData();
-		Mongodb_Driver.insertDailyData(metaData_map, prices_list);
+	    
+	    readInFile(); //reads data from web text file and parses
+	    
+	    //testing
+	    //Mongodb_Driver.dropAllData();
+	    
+	    Mongodb_Driver.insertDailyData(metaData_map, prices_list);
 	}
-	
-	//reads in cattle data and hands off to parse to return useful data
+    //weekly summary url http://www.ams.usda.gov/mnreports/mg_ls145.txt
+    /**
+       reads in cattle data and hands off to parse to return useful data
+     */
 	public static void readInFile() throws IOException{
 		String reportName;
 		String metaData;
@@ -89,7 +92,7 @@ public class CashCowMain {
 		}
 		in.close();
 	}
-	
+    /*	
 	private static boolean isWeekend(){
 		Calendar cal = Calendar.getInstance();
 		Integer today = cal.get(Calendar.DAY_OF_WEEK);
@@ -100,4 +103,5 @@ public class CashCowMain {
 			return false;
 		
 	}
+    */
 }
