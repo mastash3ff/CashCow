@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java.parser;
+package parser;
 
 /**
  * @author Brandon Sheffield

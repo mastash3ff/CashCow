@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java.parser;
+package parser;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.utils.Logging;
+
+import utils.Logging;
 
 /**
  * @author Brandon Sheffield
@@ -32,6 +33,18 @@ public class CowParser {
 	final static String PRICE_RNG = "Price Range";
 	final static String AVG_PRICE = "Avg Price";
 	
+	/**
+	 * 
+	 * @param reportName
+	 * @param metaData
+	 * @param locationDailySummary
+	 * @param dateOfLiveAuctions
+	 * @param cattleReceipts
+	 * @param summary
+	 * @return
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	public static Map<String, Object> buildMetaDataMap(String reportName, String metaData, String locationDailySummary,
 			String dateOfLiveAuctions, String cattleReceipts, String summary) throws SecurityException, IOException{
 		Map<String, Object> m = new HashMap<>();
@@ -89,6 +102,21 @@ public class CowParser {
 		m.put(AVG_PRICE, q.poll());
 		
 		return m;
+	}
+	
+	//TODO parse ranges of price trends
+	/**
+	 * 
+	 * @param weeklySummary
+	 * @return
+	 */
+	public static Map<String,Object> getWeeklyPriceTrends(String weeklySummary){
+		Map<String,Object> m = new HashMap<>();
+		
+		//slaughter cows,bulls
+		return m;
+		
+		
 	}
 	/*
 	public static String getMetaTestString(){

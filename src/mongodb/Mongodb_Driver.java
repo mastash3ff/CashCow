@@ -1,4 +1,4 @@
-package java.mongodb;
+package mongodb;
 
 import java.net.UnknownHostException;
 import com.mongodb.MongoClient;
@@ -27,6 +27,13 @@ public class Mongodb_Driver {
 	
 	static MongoClient mongoClient = new MongoClient();
 	static MongoDatabase db = mongoClient.getDatabase("cashcow");
+	
+	/**
+	 * Parse weekly data
+	 */
+	public static void insertWeeklySummary(){
+		
+	}
 
 	/**
 	 * @param prices_list 
@@ -57,8 +64,15 @@ public class Mongodb_Driver {
 						));
 	}
 
+	/**
+	 * Drop everything in the daily reports
+	 */
 	public static void dropAllData(){
 		db.getCollection("daily_reports").drop();
+	}
+	
+	public static void dropWeeklyData(){
+		db.getCollection("weekly_reports").drop();
 	}
 	/*
 	public static void testInsert(){
