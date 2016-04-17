@@ -23,14 +23,26 @@ def get():
     collec = db['daily_reports']
     
     #grab most recent insertion...shaky logic i know
-    cursor = collec.find().sort('_id',DESCENDING).limit(1)
+    '''cursor = collec.find().sort('_id',DESCENDING).limit(1)
     doc = cursor[0]
     doc.pop('_id') #get rid of id. causes problems w/ jsonify
-    return jsonify({'Daily Data':doc})
+    '''
+    #return jsonify({'Daily Data':doc})
+    return jsonify({'Daily Data':'Hello World!'})
 
 '''
 TODO
 -grab weekly data
+'''
+
+'''
+TODO
+Grab last weeks data and compare to this weekly
+'''
+
+'''
+TODO
+compare yesterday to today
 '''
 
 if __name__ == '__main__':
