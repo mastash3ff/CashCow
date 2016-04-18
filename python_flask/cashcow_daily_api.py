@@ -18,9 +18,9 @@ app = Flask(__name__)
 
 @app.route('/cashcow/daily_data',methods=['GET'])
 def get():
-    client = MongoClient('localhost',27017) #explicit default 
-    db = client['cashcow']
-    collec = db['daily_reports']
+    #client = MongoClient('localhost') #explicit default 
+    #db = client['cashcow']
+    #collec = db['daily_reports']
     
     #grab most recent insertion...shaky logic i know
     '''cursor = collec.find().sort('_id',DESCENDING).limit(1)
@@ -46,4 +46,4 @@ compare yesterday to today
 '''
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='bsheffield.com',port=4758)
