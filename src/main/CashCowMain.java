@@ -4,6 +4,7 @@ import java.util.Map;
 
 import mongodb.Mongodb_Driver;
 import parser.CashCowParser;
+import parser.DailyParser;
 import parser.WeeklyParser;
 
 /**
@@ -17,28 +18,28 @@ public class CashCowMain {
 
 	public static void main(String[] args) throws IOException {
 
-		final String URL = "http://www.ams.usda.gov/mnreports/mg_ls145.txt";
-		CashCowParser weeklyParser = new WeeklyParser();
-		//CashCowParser dailySummary = new DailyParser(); //TODO
+		final String WEEKLY_URL = "https://www.ams.usda.gov/mnreports/mg_ls145.txt";
+		final String DAILY_URL = "https://www.ams.usda.gov/mnreports/mg_ls144.txt";
 		
-		weeklyParser.readInSummary(URL); //TODO
+		CashCowParser dailyParser = new DailyParser();
+		Boolean wasDailyRead = dailyParser.readInSummary(DAILY_URL);
+		
+		//CashCowParser weeklyParser = new WeeklyParser();
+		//Boolean wasRead = weeklyParser.readInSummary(URL); //TODO
 		//System.out.println(weeklyParser.getParserName());
 		//System.out.println(weeklyParser.converToMapofData(weeklyParser.testWeeklyData()));
-		//testing
+		
+		
 		//Mongodb_Driver.dropAllData();
-		Mongodb_Driver.insertWeeklyData(weeklyParser.getMetaDataMap(), weeklyParser.getPricesList());
-	}
-
-	/*	
-	private static boolean isWeekend(){
-		Calendar cal = Calendar.getInstance();
-		Integer today = cal.get(Calendar.DAY_OF_WEEK);
-		//1 and 7 represent Sunday and Saturday respectively
-		if (today == 1 || today == 7)
-			return true;
+		/*
+		if (wasRead)
+			Mongodb_Driver.insertWeeklyData(weeklyParser.getMetaDataMap(), weeklyParser.getPricesList());
 		else
-			return false;
-
+			System.err.println("Could not read data!");
+			*/
+		if (wasDailyRead)
+			Mongodb_Driver.insertWeeklyData(dailyParser.getMetaDataMap(), dailyParser.getPricesList());
+		else
+			System.err.println("Could not read data!");
 	}
-	 */
 }

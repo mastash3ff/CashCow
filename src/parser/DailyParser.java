@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import utils.Dumps;
 import utils.Logging;
 
 /**
@@ -58,7 +60,7 @@ public class DailyParser implements CashCowParser{
 	 * @see readers.Summary#readInSummary(java.lang.String)
 	 */
 	@Override
-	public Boolean readInSummary(final String URL) throws IOException {
+	public Boolean readInSummary(final String URL) {
 
 		String reportName;
 		String metaData;
@@ -67,57 +69,68 @@ public class DailyParser implements CashCowParser{
 		String cattleReceipts;
 		String description;
 		String line = "";
-		String headers;//TODO currently no use. keep for now.
-		final String DAILY_WEB_LINK = "http://www.ams.usda.gov/mnreports/mg_ls144.txt";
 
 		//for offline testing
 		//File f = new File("./src/read_this");
 		//BufferedReader in = new BufferedReader(new FileReader(f));
 
-		URL url = new URL("http://www.ams.usda.gov/mnreports/mg_ls144.txt");
-		BufferedReader in = new BufferedReader( new InputStreamReader(url.openStream()));
+		try{
+			URL url = new URL(URL);
+			BufferedReader in = new BufferedReader( new InputStreamReader(url.openStream()));
 
-		reportName = in.readLine();
-		metaData = in.readLine();
+			reportName = in.readLine();
+			metaData = in.readLine();
 
-		in.readLine(); //blank line throw away
-		locationDailySummary = in.readLine();
-		dateOfLiveAuctions = in.readLine();
-		in.readLine();
-		cattleReceipts = in.readLine();
-		in.readLine();
+			in.readLine(); //blank line throw away
+			locationDailySummary = in.readLine();
+			dateOfLiveAuctions = in.readLine();
+			in.readLine();
+			cattleReceipts = in.readLine();
+			in.readLine();
 
-		StringBuilder descripStr = new StringBuilder();
-		line = in.readLine();
-		descripStr.append(line);
-		while (!line.matches(""))
-			descripStr.append(line = in.readLine());
-
-		description = descripStr.toString();	
-		metaData_map = buildMetaDataMap(reportName, metaData,locationDailySummary,
-				dateOfLiveAuctions,cattleReceipts,description);
-
-		while (line!=null){
-			line = line.trim(); //matches messed up with leading whitespace
-
-			//TODO eventually parse more than just the lazy heifers
-			if (line.matches("Feeder Heifers Medium and Large 1")){
-
-				headers = in.readLine();
-				line = in.readLine().trim();
-
-				//read in heifer data until blankline
-				while(!line.matches("")){
-					prices_list.add( converToMapofData(line));
-					line = in.readLine().trim();
-				}
-			}
+			StringBuilder descripStr = new StringBuilder();
 			line = in.readLine();
+			descripStr.append(line);
+			while (!line.matches(""))
+				descripStr.append(line = in.readLine());
+
+			description = descripStr.toString();
+			System.out.println("report name=> " + reportName);
+			System.out.println("meta data=> " + metaData);
+			System.out.println("location daily summary=> " + locationDailySummary);
+			System.out.println("date of live auctions=> " + dateOfLiveAuctions);
+			System.out.println("cattle receipts=> " + cattleReceipts);
+			System.out.println("description=> \n" + description);
+			metaData_map = buildMetaDataMap(reportName, metaData,locationDailySummary,
+					dateOfLiveAuctions,cattleReceipts,description);
+
+			while (line!=null){
+				line = line.trim(); //matches messed up with leading whitespace
+
+				//TODO eventually parse more than just the lazy heifers
+				if (line.contains("Feeder Heifers Medium and Large 2")){
+
+					//headers = in.readLine();
+					line = in.readLine().trim();
+
+					//read in heifer data until blankline
+					while(!line.matches("")){
+						prices_list.add( converToMapofData(line));
+						line = in.readLine().trim();
+					}
+				}
+				line = in.readLine();
+			}
+			in.close();
+		}catch(IOException io){
+			System.err.println("Error opening up URL stream.");
+			System.err.println(io.getMessage());
+			//io.printStackTrace();
+			return false;
 		}
-		in.close();
 		return true;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see readers.Summary#getPricesList()
 	 */

@@ -35,9 +35,9 @@ public class WeeklyParser implements CashCowParser{
 	private final static String DATE_OF_LIVE_AUCTIONS = "Date of Live Auctions";
 	private final static String RECEIPTS = "Total Receipts";
 	private final static String SUMMARY = "Summary";
-
 	private final static String SLAUGHTER_COWS = "Slaughter Cows";
 	private final static String BULLS = "Bulls";
+	
 	public WeeklyParser() {
 		prices_list = new ArrayList<>();
 		metaData_map = new HashMap<>();
@@ -61,7 +61,6 @@ public class WeeklyParser implements CashCowParser{
 		String metaData;
 		String locationDailySummary;
 		String dateOfLiveAuctions;
-		//String cattleReceipts;
 		String description;
 		String line = "";
 		URL url = new URL(URL);
@@ -84,7 +83,7 @@ public class WeeklyParser implements CashCowParser{
 		//main data we care for that has trends in weekly prices
 		while (!line.matches(""))
 			descriptStr.append(line = in.readLine());
-
+		
 		description = descriptStr.toString();
 
 		metaData_map = buildMetaDataMap(reportName, metaData, locationDailySummary, dateOfLiveAuctions, null, description);
